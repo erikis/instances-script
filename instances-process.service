@@ -1,0 +1,33 @@
+# Example systemd service unit for running instances-process.py
+#
+# Do not start or enable this service directly. Instead start the service manually by running
+# "touch /var/lib/misc/instances.updated" which is a path monitored by instances-updated.path.
+#
+# Note that instances-updated.path will restart this service immmediately if instances.updated
+# exists after running this service. See: man systemd.path
+
+[Unit]
+Description=Run instances-process.py
+# ConditionPathExists to remind about using "touch /var/lib/misc/instances.updated"
+ConditionPathExists=/var/lib/misc/instances.updated
+# StartLimit to allow running repeatedly/continuously (with sleep 1 after each run)
+StartLimitIntervalSec=1
+StartLimitBurst=3
+
+[Service]
+# Configure address sets (comma-separated)
+Environment=INSTANCES_ADDRESS_SETS="host"
+ExecStart=bash -c " \
+  # /opt/instances-process.py should be changed to the actual path
+  while /opt/instances-process.py; status=$?; [[ $status -eq 0 ]]; do \
+    # /etc/dnsmasq.myhosts/ needs to be created and used with dnsmasq's hostsdir option
+    mv /var/lib/misc/instances.hosts /etc/dnsmasq.myhosts/; \
+    mv /var/lib/misc/instances.nftables_chains /etc/nftables-instances-chains.conf; \
+    mv /var/lib/misc/instances.nftables_sets /etc/nftables-instances-sets.conf; \
+    # Reload of nftables commented out in case it hasn't been configured to be reloaded safely
+    #systemctl reload nftables; \
+    # Sleep and loop to check for updates again instead of exiting and restarting quickly
+    sleep 1; \
+  done; \
+  # If the last status wasn't 10 for "not updated" then there was an error -- remove .updated file
+  if [[ $status -ne 10 ]]; then rm -f /var/lib/misc/instances.updated; exit $status; fi"

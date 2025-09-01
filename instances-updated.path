@@ -1,0 +1,13 @@
+# Example systemd path unit for detecting creation of instances.updated by instances-update.py
+#
+# Start and enable by running "systemctl enable --now instances-updated.path"
+
+[Unit]
+Description=Monitor creation of instances.updated by instances-update.py
+
+[Path]
+PathExists=/var/lib/misc/instances.updated
+Unit=instances-process.service
+
+[Install]
+WantedBy=multi-user.target
