@@ -79,7 +79,6 @@ def main():
             if isinstance(ip_address, ipaddress.IPv6Address):
                 mac_address = os.environ.get('DNSMASQ_MAC') # "MAC address of the client, if known"
                 if not mac_address:
-                    print("DNSMASQ_MAC environment variable not set", file=sys.stderr)
                     sys.exit(0) # No update is possible but not considered an error
             hostname = args.hostname # "the hostname, if known"
         case '--initialize':
