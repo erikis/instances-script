@@ -95,37 +95,38 @@ def load_instances_json(file_path):
 def save_instances_hosts(file_path, instances):
     """Save the host addresses to file"""
     count = 0
-    domain = os.environ.get('INSTANCES_HOSTS_DOMAIN', default='.instance.internal')
-    if not re.fullmatch(r'[a-zA-Z0-9\.-]*', domain):
-        print(f"Invalid hosts domain: {domain}", file=sys.stderr)
-        return count
     try:
         with open(file_path, 'w', encoding=ENC) as f:
             ip_address_fields = ['ipv4', 'ipv6_gua', 'ipv6_ula', 'ipv6_lla']
-            for _, instance in instances.items():
-                name = instance.get('name')
-                if name:
-                    for ip_address_field in ip_address_fields:
-                        ip_address = instance.get(ip_address_field)
-                        if ip_address:
-                            # Write <ip-address> <full-name> <extra-names>
-                            full_name = f'{name}{domain}'
-                            extra_names = ''
-                            match ip_address_field:
-                                case 'ipv4':
-                                    # Extra name for only resolving to IPv4 address
-                                    extra_names = f' {name}.v4{domain}'
-                                case 'ipv6_gua':
-                                    # Extra names for resolving to IPv6 globally reachable address
-                                    extra_names = f' {name}.v6{domain} {name}.g6{domain}'
-                                case 'ipv6_ula':
-                                    # Extra names for resolving to IPv6 unique local address
-                                    extra_names = f' {name}.v6{domain} {name}.u6{domain}'
-                                case 'ipv6_lla':
-                                    # Ensure IPv6 link-local address is only used if asked for
-                                    full_name = f'{name}.l6{domain}'
-                            f.write(f'{ip_address} {full_name}{extra_names}\n')
-                            count += 1
+            for domain in os.environ.get('INSTANCES_HOSTS_DOMAIN', default='.instance.internal') \
+                    .split(','):
+                if not re.fullmatch(r'[a-zA-Z0-9\.-]*', domain):
+                    print(f"Invalid hosts domain: {domain}", file=sys.stderr)
+                    continue
+                for _, instance in instances.items():
+                    name = instance.get('name')
+                    if name:
+                        for ip_address_field in ip_address_fields:
+                            ip_address = instance.get(ip_address_field)
+                            if ip_address:
+                                # Write <ip-address> <full-name> <extra-names>
+                                full_name = f'{name}{domain}'
+                                extra_names = ''
+                                match ip_address_field:
+                                    case 'ipv4':
+                                        # Extra name for only resolving to IPv4 address
+                                        extra_names = f' {name}.v4{domain}'
+                                    case 'ipv6_gua':
+                                        # Extra names for IPv6 globally reachable address
+                                        extra_names = f' {name}.v6{domain} {name}.g6{domain}'
+                                    case 'ipv6_ula':
+                                        # Extra names for IPv6 unique local address
+                                        extra_names = f' {name}.v6{domain} {name}.u6{domain}'
+                                    case 'ipv6_lla':
+                                        # Ensure IPv6 link-local address is only used if asked for
+                                        full_name = f'{name}.l6{domain}'
+                                f.write(f'{ip_address} {full_name}{extra_names}\n')
+                                count += 1
     except IOError as e:
         print(f"Error writing hosts file: {e}", file=sys.stderr)
         sys.exit(1)

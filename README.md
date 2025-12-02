@@ -107,7 +107,7 @@ options:
 | `INSTANCES_ADDRESS_SETS` | Address sets to include (comma-separated hostnames) | host |
 | `INSTANCES_BASE_PATH` | Base path to derive all file paths from (file name without extension) | /var/lib/misc/instances |
 | `INSTANCES_BASE_ID` | Id to append to base path after a hyphen (e.g., br0) | (none) |
-| `INSTANCES_HOSTS_DOMAIN` | Domain for names in hosts file (with initial dot) | .instance.internal |
+| `INSTANCES_HOSTS_DOMAIN` | Domain for names in hosts file (with initial dot, comma-separated if multiple) | .instance.internal |
 
 ## License
 
