@@ -187,9 +187,9 @@ def load_instances_json(interface_name, file_path):
         # Secondary IPv4 and temporary IPv6 addresses (see "man ip-address") are not supported.
         results = []
         commands = [
-            f"ip -json address show dev \"{interface_name}\" | jq -r '.[] | .address'",
-            f"ip -json address show dev \"{interface_name}\" -secondary | jq -r '.[] | .addr_info[] | select(.family==\"inet\") | .local'",  # pylint: disable=line-too-long
-            f"ip -json address show dev \"{interface_name}\" -temporary | jq -r '.[] | .addr_info[] | select(.family==\"inet6\") | .local'"  # pylint: disable=line-too-long
+            f"ip -json address show dev \"{interface_name}\" scope link | jq -r '.[] | .address'",
+            f"ip -json -4 address show dev \"{interface_name}\" -secondary | jq -r '.[] | .addr_info[] | .local'",  # pylint: disable=line-too-long
+            f"ip -json -6 address show dev \"{interface_name}\" -temporary -deprecated | jq -r '.[] | .addr_info[] | .local'"  # pylint: disable=line-too-long
         ]
         for command in commands:
             result = subprocess.run(command, shell=True, capture_output=True, text=True,

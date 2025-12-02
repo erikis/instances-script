@@ -1,0 +1,8 @@
+10.0.0.1 host.instance.internal host.v4.instance.internal
+2001:db8:1234::823a host.instance.internal host.v6.instance.internal host.g6.instance.internal
+fdb8:7a32:ffb5::823a host.instance.internal host.v6.instance.internal host.u6.instance.internal
+fe80::1322:33ff:fe44:5501 host.l6.instance.internal
+10.0.247.12 example.instance.internal example.v4.instance.internal
+2001:db8:1234::a85c:93ca example.instance.internal example.v6.instance.internal example.g6.instance.internal
+fdb8:7a32:ffb5::a85c:93ca example.instance.internal example.v6.instance.internal example.u6.instance.internal
+fe80::1322:33ff:fe44:5511 example.l6.instance.internal

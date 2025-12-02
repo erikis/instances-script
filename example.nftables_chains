@@ -1,0 +1,16 @@
+# Use: ether type arp jump instances_drop_arp
+chain instances_drop_arp {
+    arp saddr ip 10.0.0.1 counter ether saddr 11:22:33:44:55:01 counter return comment "host"
+    arp saddr ip 10.0.247.12 counter ether saddr 11:22:33:44:55:11 counter return comment "example"
+    counter drop comment "lockdown" # prepend to log to dmesg: log prefix "[nftables] dropped ARP: "
+}
+# Use: ether type ip6 icmpv6 type nd-neighbor-advert jump instances_drop_ndp
+chain instances_drop_ndp {
+    @nh,384,128 0x20010db812340000000000000000823a counter ether saddr 11:22:33:44:55:01 counter return comment "host"
+    @nh,384,128 0xfdb87a32ffb50000000000000000823a counter ether saddr 11:22:33:44:55:01 counter return comment "host"
+    @nh,384,128 0xfe80000000000000132233fffe445501 counter ether saddr 11:22:33:44:55:01 counter return comment "host"
+    @nh,384,128 0x20010db81234000000000000a85c93ca counter ether saddr 11:22:33:44:55:11 counter return comment "example"
+    @nh,384,128 0xfdb87a32ffb5000000000000a85c93ca counter ether saddr 11:22:33:44:55:11 counter return comment "example"
+    @nh,384,128 0xfe80000000000000132233fffe445511 counter ether saddr 11:22:33:44:55:11 counter return comment "example"
+    counter drop comment "lockdown" # prepend to log to dmesg: log prefix "[nftables] dropped NDP: "
+}

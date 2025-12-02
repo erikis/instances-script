@@ -1,0 +1,50 @@
+# Use: @all_v4.instance
+set all_v4.instance {
+    type ipv4_addr
+    elements = { 10.0.0.1, 10.0.247.12, }
+}
+# Use: @all_v6.instance
+set all_v6.instance {
+    type ipv6_addr
+    elements = { 2001:db8:1234::823a, fdb8:7a32:ffb5::823a, 2001:db8:1234::a85c:93ca, fdb8:7a32:ffb5::a85c:93ca, }
+}
+# Use: @all_g6.instance
+set all_g6.instance {
+    type ipv6_addr
+    elements = { 2001:db8:1234::823a, 2001:db8:1234::a85c:93ca, }
+}
+# Use: @all_u6.instance
+set all_u6.instance {
+    type ipv6_addr
+    elements = { fdb8:7a32:ffb5::823a, fdb8:7a32:ffb5::a85c:93ca, }
+}
+# Use: @all_l6.instance
+set all_l6.instance {
+    type ipv6_addr
+    elements = { fe80::1322:33ff:fe44:5501, fe80::1322:33ff:fe44:5511, }
+}
+# Use: @host.v4.instance
+set host.v4.instance {
+    type ipv4_addr
+    elements = { 10.0.0.1, }
+}
+# Use: @host.v6.instance
+set host.v6.instance {
+    type ipv6_addr
+    elements = { 2001:db8:1234::823a, fdb8:7a32:ffb5::823a, }
+}
+# Use: @host.g6.instance
+set host.g6.instance {
+    type ipv6_addr
+    elements = { 2001:db8:1234::823a, }
+}
+# Use: @host.u6.instance
+set host.u6.instance {
+    type ipv6_addr
+    elements = { fdb8:7a32:ffb5::823a, }
+}
+# Use: @host.l6.instance
+set host.l6.instance {
+    type ipv6_addr
+    elements = { fe80::1322:33ff:fe44:5501, }
+}

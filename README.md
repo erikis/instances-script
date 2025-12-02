@@ -29,6 +29,40 @@ _Instances_ is implemented in Python (requiring version 3.11 or newer) as two sc
 
 Both scripts acquire a file lock before accessing files, in order to prevent concurrent access if **instances-update.py** is run manually and when **instances-process.py** is run.
 
+## Examples
+
+[Example JSON output file](example.json) from running **instances-update.py** manually as follows (with invented example addresses, actual addresses replaced; text below uses the 2001:db8::/32 documentation prefix which is ignored by the script, while the actual run used an invented real address):
+
+```
+export INSTANCES_BASE_PATH=example DNSMASQ_MAC=11:22:33:44:55:11
+./instances-update.py --initialize br0 host
+./instances-update.py add 11:22:33:44:55:11 10.0.247.12 example
+./instances-update.py add 00000 2001:db8:1234::a85c:93ca example
+./instances-update.py add 00000 fdb8:7a32:ffb5::a85c:93ca example
+./instances-process.py
+```
+
+```json
+{
+  "11:22:33:44:55:01": {
+    "name": "host",
+    "ipv4": "10.0.0.1",
+    "ipv6_gua": "2001:db8:1234::823a",
+    "ipv6_ula": "fdb8:7a32:ffb5::823a",
+    "ipv6_lla": "fe80::1322:33ff:fe44:5501"
+  },
+  "11:22:33:44:55:11": {
+    "name": "example",
+    "ipv6_lla": "fe80::1322:33ff:fe44:5511",
+    "ipv4": "10.0.247.12",
+    "ipv6_gua": "2001:db8:1234::a85c:93ca",
+    "ipv6_ula": "fdb8:7a32:ffb5::a85c:93ca"
+  }
+}
+```
+
+For the corresponding **instances-process.py** output files, see [hosts](example.hosts), [nftables_chains](example.nftables_chains), and [nftables_sets](example.nftables_sets).
+
 ## Requirements
 
 ### Debian
